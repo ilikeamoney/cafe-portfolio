@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cafe.repository.BoardMapper">
+    <insert id="writeBoard">
+        INSERT INTO board (mem_id, cafe_id, title, content, write_date, view_count)
+        VALUES (#{board.memId}, #{board.cafeId}, #{board.title}, #{board.content}, NOW(), #{board.viewCount});
+    </insert>
+
+    <select id="findBoard" resultType="com.example.cafe.domain.Board">
+        SELECT * FROM board WHERE id = #{boardId};
+    </select>
+
+    <delete id="deleteBoard">
+        DELETE FROM board WHERE id = #{boardId};
+    </delete>
+
+    <delete id="deleteAllMylBoard">
+        DELETE FROM board WHERE mem_id = #{memId};
+    </delete>
+
+    <select id="countMyBoard">
+        SELECT COUNT(id) FROM board WHERE mem_id = #{memId};
+    </select>
+
+    <select id="countAllBoard">
+        SELECT COUNT(id) FROM board;
+    </select>
+
+    <select id="getMemberBoard">
+        SELECT * FROM board WHERE mem_id = #{memId} ORDER BY write_date DESC LIMIT #{start}, #{end};;
+    </select>
+
+    <select id="getCafeBoard">
+        SELECT * FROM board WHERE cafe_id = #{cafeId} ORDER BY write_date DESC LIMIT #{start}, #{end};
+    </select>
+
+    <delete id="deleteCafeBoard">
+        DELETE FROM board WHERE mem_id = #{memId} AND cafe_id = #{cafeId};
+    </delete>
+
+    <select id="countCafeBoard">
+        SELECT COUNT(*) FROM board WHERE cafe_id = #{cafeId};
+    </select>
+
+    <update id="increaseViewCount">
+        UPDATE board SET view_count = view_count + 1 WHERE id = #{boardId};
+    </update>
+
+    <select id="findBoardDetail">
+        SELECT m.id AS 'memId', b.cafe_id AS 'cafeId', m.name, b.id AS 'boardId', b.title, b.content, b.view_count AS 'viewCount', b.write_date AS 'writeDate' FROM board b
+        JOIN member m ON b.mem_id = m.id
+        WHERE b.id = #{boardId};
+    </select>
+
+    <update id="updateBoard">
+        UPDATE board SET title = #{boardEdit.title}, content = #{boardEdit.content} WHERE id = #{boardEdit.boardId};
+    </update>
+</mapper>

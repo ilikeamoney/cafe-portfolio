@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cafe.repository.CommentMapper">
+    <insert id="writeComment">
+        INSERT INTO comment (mem_id, cafe_id, title, content, write_date, reg, re_level, re_step)
+        VALUES (#{comment.memId}, #{comment.cafeId}, #{comment.title}, #{comment.content}, NOW(), #{comment.reg}, #{comment.reLevel}, #{comment.reStep});
+    </insert>
+
+    <select id="findComment" resultType="com.example.cafe.domain.Comment">
+        SELECT * FROM comment WHERE id = #{commId};
+    </select>
+
+    <update id="updateComment">
+        UPDATE comment SET title = #{commentEdit.title}, content = #{commentEdit.content}
+        WHERE id = #{commId};
+    </update>
+
+    <delete id="deleteComment">
+        DELETE FROM comment WHERE id = #{commId};
+    </delete>
+
+    <delete id="deleteBoardComment">
+        DELETE FROM comment WHERE reg = #{boardId};
+    </delete>
+
+    <delete id="deleteMemberComment">
+        DELETE FROM comment WHERE mem_id = #{memId};
+    </delete>
+
+    <select id="countComment">
+        SELECT COUNT(id) FROM comment;
+    </select>
+
+    <select id="countBoardComment">
+        SELECT COUNT(id) FROM comment WHERE reg = #{boardId};
+    </select>
+
+    <select id="countMemberComment">
+        SELECT COUNT(id) FROM comment WHERE mem_id = #{memId};
+    </select>
+
+    <update id="insertCommentAlignment">
+        UPDATE comment SET re_step = re_step + 1 WHERE reg = #{reg} AND re_step >= #{reStep};
+    </update>
+
+    <update id="deleteCommentAlignment">
+        UPDATE comment SET re_step = re_step - 1 WHERE reg = #{reg} AND re_step >= #{reStep};
+    </update>
+
+    <select id="getBoardCommentStepMax">
+        SELECT MAX(re_step) FROM comment WHERE reg = #{reg};
+    </select>
+
+    <delete id="deleteCafeComment">
+        DELETE FROM comment WHERE mem_id = #{memId} AND cafe_id = #{cafeId};
+    </delete>
+
+    <select id="countCafeComment">
+        SELECT COUNT(*) FROM comment WHERE cafe_id = #{cafeId};
+    </select>
+
+    <select id="getBoardComments">
+        SELECT m.name, c.id, c.mem_id AS 'memId', c.title, c.content, c.write_date AS 'writeDate' FROM comment c
+        INNER JOIN member m ON c.mem_id = m.id
+        WHERE reg = #{boardId}
+        ORDER BY c.re_step
+        LIMIT #{start}, #{end};
+    </select>
+</mapper>

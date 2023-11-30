@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.cafe.repository.CafeMapper">
+
+    <insert id="createCafe">
+        INSERT INTO cafe (admin_id, title, introduce, cafe_img, genre, create_date)
+        VALUES (#{cafe.adminId}, #{cafe.title}, #{cafe.introduce}, #{cafe.cafeImg}, #{cafe.genre}, NOW());
+    </insert>
+
+    <select id="find">
+        SELECT * FROM cafe WHERE id = #{cafeId}
+    </select>
+
+    <select id="findMyCafe">
+        SELECT * FROM cafe WHERE admin_id = #{adminId};
+    </select>
+
+    <select id="getMyCafeId">
+        SELECT id FROM cafe WHERE admin_id = #{adminId};
+    </select>
+
+    <select id="getMyAdminId">
+        SELECT admin_id FROM cafe WHERE id = #{cafeId};
+    </select>
+
+    <select id="getMyCrew">
+        SELECT crew_id FROM cafe WHERE id = #{cafeId};
+    </select>
+
+    <select id="getTotalCafeCount">
+        SELECT COUNT(*) FROM cafe;
+    </select>
+
+    <update id="joinCafe">
+        UPDATE cafe SET crew_id = #{joinCrewId} WHERE id = #{cafeId};
+    </update>
+
+    <update id="setMyCrew">
+        UPDATE cafe SET crew_id = #{myCrew} WHERE id = #{cafeId};
+    </update>
+
+    <select id="getCafeBoardCount">
+        SELECT COUNT(*) FROM board WHERE cafe_id = #{cafeId};
+    </select>
+
+    <select id="getAllCafe">
+        SELECT * FROM cafe ORDER BY create_date DESC LIMIT #{start}, #{end};
+    </select>
+
+    <delete id="deleteCafe">
+        DELETE FROM cafe WHERE id = #{cafeId};
+    </delete>
+</mapper>
